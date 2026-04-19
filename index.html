@@ -3,197 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DIABLO PS PANEL</title>
+<title>DIABLO PS</title>
 
 <style>
+:root {
+  --bg: #0b0f1a;
+  --text: #ffffff;
+  --card: #111827;
+}
+
+body.light {
+  --bg: #f5f5f5;
+  --text: #111;
+  --card: #ffffff;
+}
+
+body.normal {
+  --bg: #1a1a2e;
+  --text: #fff;
+  --card: #222;
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: #0b0f1a;
-  color: white;
-}
-
-/* LAYOUT */
-.wrapper {
+  background: var(--bg);
+  color: var(--text);
   display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  text-align: center;
 }
 
-/* SIDEBAR */
-.sidebar {
-  width: 220px;
-  background: #05070f;
-  height: 100vh;
-  padding: 20px;
-  box-shadow: 0 0 20px rgba(0,255,255,0.2);
-}
-
-.sidebar h2 {
-  color: cyan;
-}
-
-.menu {
-  margin-top: 30px;
-}
-
-.menu button {
-  width: 100%;
-  margin: 10px 0;
-  padding: 12px;
-  background: #0f172a;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-.menu button:hover {
-  background: cyan;
-  color: black;
-}
-
-/* MAIN */
-.main {
+.container {
   flex: 1;
   padding: 20px;
 }
 
-.header {
-  font-size: 24px;
-  margin-bottom: 20px;
+/* TITLE */
+h1 {
+  font-size: 42px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: #ff3c00;
+  text-shadow: 0 0 10px #ff3c00, 0 0 20px #ff0000;
 }
 
-/* CARD */
-.card {
-  background: #111827;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 0 15px rgba(0,255,255,0.1);
-}
-
+/* BANNER */
 .banner {
-  width: 100%;
+  width: 90%;
+  max-width: 700px;
   border-radius: 10px;
+  margin-top: 15px;
 }
 
 /* STATUS */
-.status-online {
+.status {
+  margin-top: 15px;
+  font-size: 20px;
   color: #00ff9d;
 }
 
-/* BUTTON */
-.btn {
+/* BUTTON KOTAK */
+.button {
   display: block;
-  margin: 10px 0;
-  padding: 12px;
-  background: #0f172a;
+  margin: 12px auto;
+  padding: 14px;
+  width: 85%;
+  max-width: 420px;
   border: none;
-  border-radius: 8px;
-  color: cyan;
+  border-radius: 5px;
+  background: #222;
+  color: #fff;
+  font-size: 15px;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.btn:hover {
-  background: cyan;
-  color: black;
+.button:hover {
+  background: #ff3c00;
 }
 
-/* HIDE */
-.tab {
+/* THEME BUTTON */
+.theme-switch {
+  margin-top: 20px;
+}
+
+.theme-switch button {
+  margin: 5px;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+}
+
+/* PLATFORM BUTTON */
+.platforms {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+.platform-btn {
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  background: #444;
+  color: white;
+}
+
+.instructions {
+  margin-top: 20px;
+  padding: 15px;
   display: none;
+  background: var(--card);
+  border-radius: 10px;
+  text-align: left;
 }
 
-.active {
-  display: block;
-}
-
+/* FOOTER BAWAH BANGET */
 .footer {
   text-align: center;
-  margin-top: 20px;
-  opacity: 0.6;
+  padding: 15px;
+  background: #000;
+  margin-top: auto;
 }
 </style>
-
 </head>
-<body>
 
-<div class="wrapper">
+<body class="normal">
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <h2>DIABLO PS</h2>
+<div class="container">
 
-  <div class="menu">
-    <button onclick="openTab('home')">🏠 Home</button>
-    <button onclick="openTab('download')">⬇ Download</button>
-    <button onclick="openTab('status')">📡 Status</button>
-    <button onclick="openTab('guide')">📘 Guide</button>
-  </div>
+<h1>WELCOME</h1>
+
+<img src="https://raw.githubusercontent.com/Diablo109-afk/diablo-ps/main/file_000000004834722f982d3d0dae57b7fd.png" class="banner">
+
+<div class="status">Server Status: ONLINE</div>
+
+<button class="button" onclick="window.open('https://mediafirehost.com')">Download VHost</button>
+<button class="button" onclick="copyText('https://dash.gtps.cloud/android/5218')">Copy Ptunnel</button>
+<button class="button" onclick="copyText('https://dash.gtps.cloud/ios/5218')">Copy iOS Host</button>
+<button class="button" onclick="copyText(`91.134.85.13 growtopia1.com\n91.134.85.13 growtopia2.com\n91.134.85.13 www.growtopia1.com\n91.134.85.13 www.growtopia2.com`)">Copy Windows Host</button>
+<button class="button" onclick="copyText(`91.134.85.13 growtopia1.com\n91.134.85.13 growtopia2.com\n91.134.85.13 www.growtopia1.com\n91.134.85.13 www.growtopia2.com`)">Copy MacOS Host</button>
+
+<div class="platforms">
+  <button class="platform-btn" onclick="show('android')">Android</button>
+  <button class="platform-btn" onclick="show('ios')">iOS</button>
+  <button class="platform-btn" onclick="show('windows')">Windows</button>
 </div>
 
-<!-- MAIN -->
-<div class="main">
-
-<div id="home" class="tab active">
-  <div class="header">Welcome Panel</div>
-
-  <div class="card">
-    <img src="https://raw.githubusercontent.com/Diablo109-afk/diablo-ps/main/file_000000004834722f982d3d0dae57b7fd.png" class="banner">
-  </div>
+<div id="android" class="instructions">
+<b>Android</b><br>
+Download Powertunnel → Paste host
 </div>
 
-<div id="download" class="tab">
-  <div class="header">Download & Host</div>
-
-  <div class="card">
-    <button class="btn" onclick="window.open('https://mediafirehost.com')">Download VHost</button>
-    <button class="btn" onclick="copyText('https://dash.gtps.cloud/android/5218')">Copy Ptunnel</button>
-    <button class="btn" onclick="copyText('https://dash.gtps.cloud/ios/5218')">Copy iOS Host</button>
-    <button class="btn" onclick="copyText(`91.134.85.13 growtopia1.com\n91.134.85.13 growtopia2.com\n91.134.85.13 www.growtopia1.com\n91.134.85.13 www.growtopia2.com`)">Copy Windows Host</button>
-  </div>
+<div id="ios" class="instructions">
+<b>iOS</b><br>
+Use Surge 5 → Import URL
 </div>
 
-<div id="status" class="tab">
-  <div class="header">Server Status</div>
-
-  <div class="card">
-    <h3 class="status-online">🟢 ONLINE</h3>
-    <p>Players Online: 120</p>
-    <p>Server Uptime: 99%</p>
-  </div>
+<div id="windows" class="instructions">
+<b>Windows</b><br>
+Edit hosts file → Paste IP
 </div>
 
-<div id="guide" class="tab">
-  <div class="header">Connection Guide</div>
+<div class="theme-switch">
+<b>Theme:</b><br>
+<button onclick="setTheme('normal')">Normal</button>
+<button onclick="setTheme('light')">Light</button>
+<button onclick="setTheme('')">Dark</button>
+</div>
 
-  <div class="card">
-    <b>Android</b><br>
-    1. Download Powertunnel<br>
-    2. Copy Ptunnel<br>
-    3. Paste & connect
-
-    <br><br>
-
-    <b>iOS</b><br>
-    1. Download Surge 5<br>
-    2. Import URL<br>
-    3. Connect
-
-    <br><br>
-
-    <b>Windows</b><br>
-    1. Edit hosts file<br>
-    2. Paste IP
-  </div>
 </div>
 
 <div class="footer">
-🐙 DIABLO PS PANEL 2026
-</div>
-
-</div>
+🐙 DIABLO PS 19-04-2026
 </div>
 
 <script>
@@ -202,9 +186,15 @@ function copyText(text) {
   alert("Copied!");
 }
 
-function openTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(tab).classList.add('active');
+function show(id) {
+  document.getElementById('android').style.display = 'none';
+  document.getElementById('ios').style.display = 'none';
+  document.getElementById('windows').style.display = 'none';
+  document.getElementById(id).style.display = 'block';
+}
+
+function setTheme(mode) {
+  document.body.className = mode;
 }
 </script>
 
