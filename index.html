@@ -3,135 +3,197 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DIABLO PS</title>
+<title>DIABLO PS PANEL</title>
+
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  font-family: 'Segoe UI', sans-serif;
+  background: #0b0f1a;
   color: white;
-  text-align: center;
 }
-.container {
-  padding: 20px;
-}
-.banner {
-  width: 90%;
-  max-width: 600px;
-  border-radius: 15px;
-  margin-top: 15px;
-}
-.status {
-  margin-top: 15px;
-  font-size: 20px;
-  color: #00ff9d;
-}
-.button {
-  display: block;
-  margin: 10px auto;
-  padding: 12px;
-  width: 80%;
-  max-width: 400px;
-  border: none;
-  border-radius: 10px;
-  background: #00c6ff;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-.button:hover {
-  background: #0072ff;
-}
-.section-buttons {
+
+/* LAYOUT */
+.wrapper {
   display: flex;
-  justify-content: space-around;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #05070f;
+  height: 100vh;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0,255,255,0.2);
+}
+
+.sidebar h2 {
+  color: cyan;
+}
+
+.menu {
   margin-top: 30px;
 }
-.small-btn {
-  padding: 10px 15px;
-  border-radius: 8px;
+
+.menu button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  background: #0f172a;
   border: none;
-  background: #ff7b00;
   color: white;
   cursor: pointer;
+  border-radius: 8px;
+  transition: 0.3s;
 }
-.instructions {
-  margin-top: 20px;
-  padding: 15px;
-  display: none;
-  background: rgba(0,0,0,0.3);
+
+.menu button:hover {
+  background: cyan;
+  color: black;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+.header {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* CARD */
+.card {
+  background: #111827;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(0,255,255,0.1);
+}
+
+.banner {
+  width: 100%;
   border-radius: 10px;
-  text-align: left;
 }
+
+/* STATUS */
+.status-online {
+  color: #00ff9d;
+}
+
+/* BUTTON */
+.btn {
+  display: block;
+  margin: 10px 0;
+  padding: 12px;
+  background: #0f172a;
+  border: none;
+  border-radius: 8px;
+  color: cyan;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: cyan;
+  color: black;
+}
+
+/* HIDE */
+.tab {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
 .footer {
-  margin-top: 40px;
-  opacity: 0.7;
+  text-align: center;
+  margin-top: 20px;
+  opacity: 0.6;
 }
 </style>
+
 </head>
 <body>
-<div class="container">
-<h1>Welcome</h1>
 
-<img src="https://github.com/Diablo109-afk/diablo-ps/blob/main/file_000000004834722f982d3d0dae57b7fd.png" class="banner" alt="Banner">
+<div class="wrapper">
 
-<div class="status">Status Server: Online</div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>DIABLO PS</h2>
 
-<button class="button" onclick="window.open('https://mediafirehost.com')">Download VHost</button>
-
-<button class="button" onclick="copyText('https://dash.gtps.cloud/android/5218')">Copy Ptunnel</button>
-
-<button class="button" onclick="copyText('https://dash.gtps.cloud/ios/5218')">Copy iOS Host</button>
-
-<button class="button" onclick="copyText(`91.134.85.13 growtopia1.com
-91.134.85.13 growtopia2.com
-91.134.85.13 www.growtopia1.com
-91.134.85.13 www.growtopia2.com`)">Copy Windows Host</button>
-
-<button class="button" onclick="copyText(`91.134.85.13 growtopia1.com
-91.134.85.13 growtopia2.com
-91.134.85.13 www.growtopia1.com
-91.134.85.13 www.growtopia2.com`)">Copy MacOS Host</button>
-
-<div class="section-buttons">
-  <button class="small-btn" onclick="show('android')">Android</button>
-  <button class="small-btn" onclick="show('ios')">iOS</button>
-  <button class="small-btn" onclick="show('windows')">Windows</button>
+  <div class="menu">
+    <button onclick="openTab('home')">🏠 Home</button>
+    <button onclick="openTab('download')">⬇ Download</button>
+    <button onclick="openTab('status')">📡 Status</button>
+    <button onclick="openTab('guide')">📘 Guide</button>
+  </div>
 </div>
 
-<div id="android" class="instructions">
-<b>Android</b><br>
-1 - First, download Powertunnel APP<br>
-2 - Click "Powertunnel" button above<br>
-3 - It will copy the host link<br>
-4 - Open Powertunnel → host settings<br>
-5 - Paste URL and change update to "on start"
+<!-- MAIN -->
+<div class="main">
+
+<div id="home" class="tab active">
+  <div class="header">Welcome Panel</div>
+
+  <div class="card">
+    <img src="https://raw.githubusercontent.com/Diablo109-afk/diablo-ps/main/file_000000004834722f982d3d0dae57b7fd.png" class="banner">
+  </div>
 </div>
 
-<div id="ios" class="instructions">
-<b>iOS</b><br>
-1 - Download "Surge 5" from App Store<br>
-2 - Press OK<br>
-3 - Click Default.conf<br>
-4 - Import profile from URL<br>
-5 - Paste copied link<br>
-6 - Setup VPN → Allow<br>
-7 - Open Growtopia
+<div id="download" class="tab">
+  <div class="header">Download & Host</div>
+
+  <div class="card">
+    <button class="btn" onclick="window.open('https://mediafirehost.com')">Download VHost</button>
+    <button class="btn" onclick="copyText('https://dash.gtps.cloud/android/5218')">Copy Ptunnel</button>
+    <button class="btn" onclick="copyText('https://dash.gtps.cloud/ios/5218')">Copy iOS Host</button>
+    <button class="btn" onclick="copyText(`91.134.85.13 growtopia1.com\n91.134.85.13 growtopia2.com\n91.134.85.13 www.growtopia1.com\n91.134.85.13 www.growtopia2.com`)">Copy Windows Host</button>
+  </div>
 </div>
 
-<div id="windows" class="instructions">
-<b>Windows</b><br>
-1 - Press Win+R<br>
-2 - Type C:\\Windows\\System32\\drivers\\etc<br>
-3 - Open hosts file
-4 - Add IP above
-5 - Save and play
+<div id="status" class="tab">
+  <div class="header">Server Status</div>
+
+  <div class="card">
+    <h3 class="status-online">🟢 ONLINE</h3>
+    <p>Players Online: 120</p>
+    <p>Server Uptime: 99%</p>
+  </div>
+</div>
+
+<div id="guide" class="tab">
+  <div class="header">Connection Guide</div>
+
+  <div class="card">
+    <b>Android</b><br>
+    1. Download Powertunnel<br>
+    2. Copy Ptunnel<br>
+    3. Paste & connect
+
+    <br><br>
+
+    <b>iOS</b><br>
+    1. Download Surge 5<br>
+    2. Import URL<br>
+    3. Connect
+
+    <br><br>
+
+    <b>Windows</b><br>
+    1. Edit hosts file<br>
+    2. Paste IP
+  </div>
 </div>
 
 <div class="footer">
-<p>🐙 DIABLO PS 19-04-2026</p>
+🐙 DIABLO PS PANEL 2026
 </div>
 
+</div>
 </div>
 
 <script>
@@ -140,12 +202,11 @@ function copyText(text) {
   alert("Copied!");
 }
 
-function show(id) {
-  document.getElementById('android').style.display = 'none';
-  document.getElementById('ios').style.display = 'none';
-  document.getElementById('windows').style.display = 'none';
-  document.getElementById(id).style.display = 'block';
+function openTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
 }
 </script>
+
 </body>
 </html>
