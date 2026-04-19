@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIABLO PS</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: white;
+  text-align: center;
+}
+.container {
+  padding: 20px;
+}
+.banner {
+  width: 90%;
+  max-width: 600px;
+  border-radius: 15px;
+  margin-top: 15px;
+}
+.status {
+  margin-top: 15px;
+  font-size: 20px;
+  color: #00ff9d;
+}
+.button {
+  display: block;
+  margin: 10px auto;
+  padding: 12px;
+  width: 80%;
+  max-width: 400px;
+  border: none;
+  border-radius: 10px;
+  background: #00c6ff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+.button:hover {
+  background: #0072ff;
+}
+.section-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+.small-btn {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  background: #ff7b00;
+  color: white;
+  cursor: pointer;
+}
+.instructions {
+  margin-top: 20px;
+  padding: 15px;
+  display: none;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  text-align: left;
+}
+.footer {
+  margin-top: 40px;
+  opacity: 0.7;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Welcome</h1>
+
+<img src="https://via.placeholder.com/600x200" class="banner" alt="Banner">
+
+<div class="status">Status Server: Online</div>
+
+<button class="button" onclick="window.open('https://mediafirehost.com')">Download VHost</button>
+
+<button class="button" onclick="copyText('https://dash.gtps.cloud/android/5218')">Copy Ptunnel</button>
+
+<button class="button" onclick="copyText('https://dash.gtps.cloud/ios/5218')">Copy iOS Host</button>
+
+<button class="button" onclick="copyText(`91.134.85.13 growtopia1.com\n91.134.85.13 growtopia2.com\n91.134.85.13 www.growtopia1.com\n91.134.85.13 www.growtopia2.com`)">Copy Windows Host</button>
+
+<button class="button" onclick="copyText(`91.134.85.13 growtopia1.com\n91.134.85.13 growtopia2.com\n91.134.85.13 www.growtopia1.com\n91.134.85.13 www.growtopia2.com`)">Copy MacOS Host</button>
+
+<div class="section-buttons">
+  <button class="small-btn" onclick="show('android')">Android</button>
+  <button class="small-btn" onclick="show('ios')">iOS</button>
+  <button class="small-btn" onclick="show('windows')">Windows</button>
+</div>
+
+<div id="android" class="instructions">
+<b>Android</b><br>
+1 - First, download Powertunnel APP<br>
+2 - Click "Powertunnel" button above<br>
+3 - It will copy the host link<br>
+4 - Open Powertunnel → host settings<br>
+5 - Paste URL and change update to "on start"
+</div>
+
+<div id="ios" class="instructions">
+<b>iOS</b><br>
+1 - Download "Surge 5" from App Store<br>
+2 - Press OK<br>
+3 - Click Default.conf<br>
+4 - Import profile from URL<br>
+5 - Paste copied link<br>
+6 - Setup VPN → Allow<br>
+7 - Open Growtopia
+</div>
+
+<div id="windows" class="instructions">
+<b>Windows</b><br>
+1 - Press Win+R<br>
+2 - Type C:\\Windows\\System32\\drivers\\etc<br>
+3 - Open hosts file
+4 - Add IP above
+5 - Save and play
+</div>
+
+<div class="footer">
+<p>🐙 DIABLO PS 19-04-2026</p>
+</div>
+
+</div>
+
+<script>
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+  alert("Copied!");
+}
+
+function show(id) {
+  document.getElementById('android').style.display = 'none';
+  document.getElementById('ios').style.display = 'none';
+  document.getElementById('windows').style.display = 'none';
+  document.getElementById(id).style.display = 'block';
+}
+</script>
+</body>
+</html>
