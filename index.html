@@ -6,7 +6,6 @@
 <title>DIABLO PS | Ultimate Growtopia Private Server</title>
 <!-- Font Awesome 6 (free icons) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<!-- Google Fonts: Exocet alternative + modern sans -->
 <style>
 /* Custom Exocet-like font with fallback */
 @font-face {
@@ -34,6 +33,8 @@
   --accent-dark: #b32d00;
   --border: #2a2f3f;
   --success: #0feba0;
+  --error: #ff4444;
+  --warning: #ffaa33;
   --shadow: 0 20px 35px -12px rgba(0,0,0,0.6);
   --glow: 0 0 12px rgba(227,76,38,0.4);
 }
@@ -173,17 +174,64 @@ h1 {
   border-left: 5px solid var(--success);
   font-weight: 600;
   backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.status-card:hover {
+  transform: scale(1.02);
+  box-shadow: var(--glow);
 }
 
 .status {
   font-size: 1.3rem;
   font-weight: bold;
-  color: var(--success);
-  text-shadow: 0 0 5px rgba(15,235,160,0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .status i {
-  font-size: 1.6rem;
+  font-size: 1rem;
+}
+
+.status-text {
+  transition: all 0.2s;
+}
+
+.status-badge {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+.status-badge.online {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+  animation: pulse-green 1.5s infinite;
+}
+
+@keyframes pulse-green {
+  0% { opacity: 0.5; transform: scale(0.8); box-shadow: 0 0 0 0 var(--success); }
+  100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 0 5px rgba(15,235,160,0); }
+}
+
+.status-badge.offline {
+  background: var(--error);
+  box-shadow: 0 0 8px var(--error);
+}
+
+.last-check {
+  font-size: 0.7rem;
+  margin-left: 10px;
+  opacity: 0.7;
 }
 
 /* Button grid */
@@ -336,13 +384,21 @@ h1 {
   100% { opacity: 0; transform: translateX(-50%) translateY(-20px); visibility: hidden;}
 }
 
-/* glow effect */
 .glow-text {
   font-weight: bold;
   background: linear-gradient(120deg, #ffb347, #ff3c00);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.refresh-icon {
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.refresh-icon:hover {
+  transform: rotate(180deg);
 }
 
 /* responsive */
@@ -373,10 +429,14 @@ h1 {
     <img src="https://raw.githubusercontent.com/Diablo109-afk/diablo-ps/main/file_000000004834722f982d3d0dae57b7fd.png" class="banner" alt="DiabloPS Banner">
   </div>
 
-  <div class="status-card">
+  <div class="status-card" onclick="checkServerStatus(true)">
     <i class="fas fa-shield-alt"></i>
-    <span class="status"><i class="fas fa-circle" style="font-size: 12px; color:#0feba0;"></i>  Server Status: ONLINE</span>
-    <i class="fas fa-bolt"></i>
+    <div class="status">
+      <span class="status-badge" id="statusBadge"></span>
+      <span class="status-text" id="statusText">Checking...</span>
+      <i class="fas fa-sync-alt refresh-icon" style="font-size: 14px; margin-left: 8px;" title="Click to refresh"></i>
+    </div>
+    <span class="last-check" id="lastCheck">-</span>
   </div>
 
   <!-- action buttons with modern icons -->
@@ -450,15 +510,99 @@ h1 {
 </div>
 
 <script>
-// Enhanced copy with toast notification
-function copyWithToast(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast("✓ Copied to clipboard!");
-  }).catch(() => {
-    showToast("⚠️ Press Ctrl+C manually", true);
-  });
+// Server configuration
+const SERVER_IP = "91.134.85.13";
+const CHECK_INTERVAL = 30000; // 30 detik realtime check
+
+// Function to check server status via fetch (CORS handling with timeout)
+async function checkServerStatus(showToastMsg = false) {
+  const statusText = document.getElementById('statusText');
+  const statusBadge = document.getElementById('statusBadge');
+  const lastCheckSpan = document.getElementById('lastCheck');
+  
+  // Update UI to checking state
+  statusText.innerHTML = 'Checking...';
+  statusBadge.className = 'status-badge';
+  statusBadge.style.background = '#ffaa33';
+  statusBadge.style.boxShadow = 'none';
+  
+  try {
+    // Try to fetch with timeout (ping via image or fetch)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    
+    // Attempt to connect to the server using fetch (CORS might be blocked, but we check connectivity)
+    // Alternative: Use image ping to avoid CORS issues
+    const pingUrl = `https://cors-anywhere.herokuapp.com/http://${SERVER_IP}`;
+    
+    // Try direct fetch first (might fail due to CORS but worth a shot)
+    let isOnline = false;
+    
+    try {
+      const response = await fetch(`http://${SERVER_IP}`, {
+        method: 'HEAD',
+        mode: 'no-cors', // This prevents CORS errors but we only know if request doesn't throw
+        signal: controller.signal
+      });
+      // With no-cors, we can't read status, but if it doesn't throw, server is reachable
+      isOnline = true;
+    } catch (fetchError) {
+      // If fetch fails, try alternative method: image ping
+      try {
+        const imgPing = new Promise((resolve) => {
+          const img = new Image();
+          const imgTimeout = setTimeout(() => resolve(false), 3000);
+          img.onload = () => {
+            clearTimeout(imgTimeout);
+            resolve(true);
+          };
+          img.onerror = () => {
+            clearTimeout(imgTimeout);
+            resolve(false);
+          };
+          img.src = `http://${SERVER_IP}/favicon.ico?t=${Date.now()}`;
+        });
+        isOnline = await imgPing;
+      } catch (imgError) {
+        isOnline = false;
+      }
+    }
+    
+    clearTimeout(timeoutId);
+    
+    // Update UI based on result
+    if (isOnline) {
+      statusText.innerHTML = 'SERVER ONLINE <i class="fas fa-check-circle"></i>';
+      statusBadge.className = 'status-badge online';
+      statusBadge.style.background = 'var(--success)';
+      if (showToastMsg) showToast("✅ Server is ONLINE! Ready to connect.", false);
+    } else {
+      statusText.innerHTML = 'SERVER OFFLINE <i class="fas fa-exclamation-triangle"></i>';
+      statusBadge.className = 'status-badge offline';
+      statusBadge.style.background = 'var(--error)';
+      if (showToastMsg) showToast("⚠️ Server appears OFFLINE. Check back later.", false);
+    }
+    
+    // Update last check time
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    lastCheckSpan.innerHTML = `🕐 ${timeStr}`;
+    
+  } catch (error) {
+    console.error("Status check error:", error);
+    statusText.innerHTML = 'SERVER OFFLINE <i class="fas fa-exclamation-triangle"></i>';
+    statusBadge.className = 'status-badge offline';
+    statusBadge.style.background = 'var(--error)';
+    
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    lastCheckSpan.innerHTML = `🕐 ${timeStr}`;
+    
+    if (showToastMsg) showToast("❌ Connection failed. Server might be down.", true);
+  }
 }
 
+// Show toast notification
 function showToast(msg, isError = false) {
   let toast = document.createElement('div');
   toast.className = 'copy-feedback';
@@ -468,6 +612,15 @@ function showToast(msg, isError = false) {
   setTimeout(() => {
     toast.remove();
   }, 2000);
+}
+
+// Enhanced copy with toast notification
+function copyWithToast(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast("✓ Copied to clipboard!");
+  }).catch(() => {
+    showToast("⚠️ Press Ctrl+C manually", true);
+  });
 }
 
 // Show selected platform instructions with active style
@@ -511,12 +664,42 @@ function loadSavedTheme() {
   else setTheme('');
 }
 
-// Helper for original copy functions (also keep old if needed)
-window.copyText = function(text) {
-  copyWithToast(text);
-};
+// Real-time status updater
+let statusInterval;
 
-// Make sure default active platform is Windows
+function startRealtimeStatus() {
+  // Initial check
+  checkServerStatus(false);
+  // Set interval for periodic checks
+  if (statusInterval) clearInterval(statusInterval);
+  statusInterval = setInterval(() => {
+    checkServerStatus(false);
+  }, CHECK_INTERVAL);
+}
+
+// Stop interval (if needed for page visibility)
+function stopRealtimeStatus() {
+  if (statusInterval) {
+    clearInterval(statusInterval);
+    statusInterval = null;
+  }
+}
+
+// Handle page visibility to save resources
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopRealtimeStatus();
+  } else {
+    startRealtimeStatus();
+  }
+});
+
+// Make sure global functions available
+window.copyWithToast = copyWithToast;
+window.checkServerStatus = checkServerStatus;
+window.showToast = showToast;
+
+// Initialize everything on page load
 window.onload = () => {
   loadSavedTheme();
   // default show windows, also active button
@@ -524,13 +707,17 @@ window.onload = () => {
   // add active glow to default windows button
   document.getElementById('btnWindows').classList.add('active');
   
-  // additional smoothness: hover animations for all buttons
-  const allButtons = document.querySelectorAll('.button, .platform-btn');
-  allButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      // just ripple effect lightweight
+  // Start realtime server status checking
+  startRealtimeStatus();
+  
+  // Add click handler to refresh icon on status card
+  const refreshIcon = document.querySelector('.refresh-icon');
+  if (refreshIcon) {
+    refreshIcon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      checkServerStatus(true);
     });
-  });
+  }
   
   // Fix for older browsers clipboard fallback
   if (!navigator.clipboard) {
@@ -544,11 +731,6 @@ window.onload = () => {
     });
   }
 };
-
-// attach global copyWithToast to existing inline buttons (just in case)
-window.copyWithToast = copyWithToast;
-
-// Dynamic content for any future buttons
 </script>
 </body>
-        </html>
+                  </html>
