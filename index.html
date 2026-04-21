@@ -81,40 +81,36 @@ body::before {
   z-index: -1;
 }
 
-/* THEME SWITCHER MODERN */
+/* THEME SWITCHER - SINGLE BUTTON MODERN */
 .theme-switcher {
   position: fixed;
   top: 20px;
   right: 20px;
-  display: flex;
-  gap: 12px;
-  background: var(--surface);
-  padding: 8px 16px;
-  border-radius: 60px;
-  backdrop-filter: blur(8px);
   z-index: 1100;
-  border: 1px solid var(--border);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.theme-switcher span {
-  font-size: 24px;
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 6px;
-  border-radius: 50%;
-  display: inline-flex;
+.theme-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 60px;
+  width: 52px;
+  height: 52px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  background: rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  font-size: 26px;
 }
 
-.theme-switcher span:hover {
-  transform: translateY(-3px);
+.theme-btn:hover {
+  transform: scale(1.08);
   background: var(--accent);
   color: white;
-  box-shadow: 0 0 12px var(--accent-glow);
+  box-shadow: 0 0 18px var(--accent-glow);
+  border-color: var(--accent-glow);
 }
 
 .container {
@@ -174,13 +170,8 @@ h1 {
   border-left: 5px solid var(--success);
   font-weight: 600;
   backdrop-filter: blur(4px);
-  cursor: pointer;
+  cursor: default;
   transition: all 0.2s;
-}
-
-.status-card:hover {
-  transform: scale(1.02);
-  box-shadow: var(--glow);
 }
 
 .status {
@@ -188,7 +179,7 @@ h1 {
   font-weight: bold;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .status i {
@@ -196,23 +187,16 @@ h1 {
 }
 
 .status-text {
-  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .status-badge {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   display: inline-block;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.4; transform: scale(0.8); }
-  100% { opacity: 1; transform: scale(1.2); }
-}
-
-.status-badge.online {
   background: var(--success);
   box-shadow: 0 0 8px var(--success);
   animation: pulse-green 1.5s infinite;
@@ -220,18 +204,7 @@ h1 {
 
 @keyframes pulse-green {
   0% { opacity: 0.5; transform: scale(0.8); box-shadow: 0 0 0 0 var(--success); }
-  100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 0 5px rgba(15,235,160,0); }
-}
-
-.status-badge.offline {
-  background: var(--error);
-  box-shadow: 0 0 8px var(--error);
-}
-
-.last-check {
-  font-size: 0.7rem;
-  margin-left: 10px;
-  opacity: 0.7;
+  100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 0 6px rgba(15,235,160,0); }
 }
 
 /* Button grid */
@@ -392,15 +365,6 @@ h1 {
   color: transparent;
 }
 
-.refresh-icon {
-  cursor: pointer;
-  transition: transform 0.3s;
-}
-
-.refresh-icon:hover {
-  transform: rotate(180deg);
-}
-
 /* responsive */
 @media (max-width: 640px) {
   .container {
@@ -412,15 +376,21 @@ h1 {
   .instructions {
     padding: 18px;
   }
+  .theme-btn {
+    width: 46px;
+    height: 46px;
+    font-size: 22px;
+  }
 }
 </style>
 </head>
 <body class="normal">
 
+<!-- SINGLE THEME SWITCHER -->
 <div class="theme-switcher">
-  <span onclick="setTheme('')" title="Dark Inferno"><i class="fas fa-moon"></i></span>
-  <span onclick="setTheme('light')" title="Light Sanctum"><i class="fas fa-sun"></i></span>
-  <span onclick="setTheme('normal')" title="Gaming Night"><i class="fas fa-gamepad"></i></span>
+  <div class="theme-btn" id="themeToggleBtn" title="Ganti tema">
+    🌙
+  </div>
 </div>
 
 <div class="container">
@@ -429,14 +399,16 @@ h1 {
     <img src="https://raw.githubusercontent.com/Diablo109-afk/diablo-ps/main/file_000000004834722f982d3d0dae57b7fd.png" class="banner" alt="DiabloPS Banner">
   </div>
 
-  <div class="status-card" onclick="checkServerStatus(true)">
+  <!-- STATUS ONLINE dengan kedipan abadi -->
+  <div class="status-card">
     <i class="fas fa-shield-alt"></i>
     <div class="status">
-      <span class="status-badge" id="statusBadge"></span>
-      <span class="status-text" id="statusText">Checking...</span>
-      <i class="fas fa-sync-alt refresh-icon" style="font-size: 14px; margin-left: 8px;" title="Click to refresh"></i>
+      <span class="status-badge"></span>
+      <span class="status-text">
+        <i class="fas fa-circle" style="font-size: 12px; color: #0feba0;"></i> 
+        SERVER ONLINE
+      </span>
     </div>
-    <span class="last-check" id="lastCheck">-</span>
   </div>
 
   <!-- action buttons with modern icons -->
@@ -510,99 +482,70 @@ h1 {
 </div>
 
 <script>
-// Server configuration
-const SERVER_IP = "91.134.85.13";
-const CHECK_INTERVAL = 30000; // 30 detik realtime check
+// ========== 1 TOMBOL THEME (CYCLE: DARK -> LIGHT -> NORMAL) ==========
+const themeStates = ['', 'light', 'normal'];  // '' = dark, 'light', 'normal'
+let currentThemeIndex = 0; // index 0 = dark
 
-// Function to check server status via fetch (CORS handling with timeout)
-async function checkServerStatus(showToastMsg = false) {
-  const statusText = document.getElementById('statusText');
-  const statusBadge = document.getElementById('statusBadge');
-  const lastCheckSpan = document.getElementById('lastCheck');
-  
-  // Update UI to checking state
-  statusText.innerHTML = 'Checking...';
-  statusBadge.className = 'status-badge';
-  statusBadge.style.background = '#ffaa33';
-  statusBadge.style.boxShadow = 'none';
-  
-  try {
-    // Try to fetch with timeout (ping via image or fetch)
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-    
-    // Attempt to connect to the server using fetch (CORS might be blocked, but we check connectivity)
-    // Alternative: Use image ping to avoid CORS issues
-    const pingUrl = `https://cors-anywhere.herokuapp.com/http://${SERVER_IP}`;
-    
-    // Try direct fetch first (might fail due to CORS but worth a shot)
-    let isOnline = false;
-    
-    try {
-      const response = await fetch(`http://${SERVER_IP}`, {
-        method: 'HEAD',
-        mode: 'no-cors', // This prevents CORS errors but we only know if request doesn't throw
-        signal: controller.signal
-      });
-      // With no-cors, we can't read status, but if it doesn't throw, server is reachable
-      isOnline = true;
-    } catch (fetchError) {
-      // If fetch fails, try alternative method: image ping
-      try {
-        const imgPing = new Promise((resolve) => {
-          const img = new Image();
-          const imgTimeout = setTimeout(() => resolve(false), 3000);
-          img.onload = () => {
-            clearTimeout(imgTimeout);
-            resolve(true);
-          };
-          img.onerror = () => {
-            clearTimeout(imgTimeout);
-            resolve(false);
-          };
-          img.src = `http://${SERVER_IP}/favicon.ico?t=${Date.now()}`;
-        });
-        isOnline = await imgPing;
-      } catch (imgError) {
-        isOnline = false;
-      }
-    }
-    
-    clearTimeout(timeoutId);
-    
-    // Update UI based on result
-    if (isOnline) {
-      statusText.innerHTML = 'SERVER ONLINE <i class="fas fa-check-circle"></i>';
-      statusBadge.className = 'status-badge online';
-      statusBadge.style.background = 'var(--success)';
-      if (showToastMsg) showToast("✅ Server is ONLINE! Ready to connect.", false);
-    } else {
-      statusText.innerHTML = 'SERVER OFFLINE <i class="fas fa-exclamation-triangle"></i>';
-      statusBadge.className = 'status-badge offline';
-      statusBadge.style.background = 'var(--error)';
-      if (showToastMsg) showToast("⚠️ Server appears OFFLINE. Check back later.", false);
-    }
-    
-    // Update last check time
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    lastCheckSpan.innerHTML = `🕐 ${timeStr}`;
-    
-  } catch (error) {
-    console.error("Status check error:", error);
-    statusText.innerHTML = 'SERVER OFFLINE <i class="fas fa-exclamation-triangle"></i>';
-    statusBadge.className = 'status-badge offline';
-    statusBadge.style.background = 'var(--error)';
-    
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    lastCheckSpan.innerHTML = `🕐 ${timeStr}`;
-    
-    if (showToastMsg) showToast("❌ Connection failed. Server might be down.", true);
+function applyTheme(themeMode) {
+  if (themeMode === 'light') {
+    document.body.className = 'light';
+    localStorage.setItem('diablo_theme', 'light');
+    updateThemeIcon('light');
+  } else if (themeMode === 'normal') {
+    document.body.className = 'normal';
+    localStorage.setItem('diablo_theme', 'normal');
+    updateThemeIcon('normal');
+  } else {
+    document.body.className = '';
+    localStorage.setItem('diablo_theme', 'dark');
+    updateThemeIcon('dark');
   }
 }
 
-// Show toast notification
+function updateThemeIcon(theme) {
+  const btn = document.getElementById('themeToggleBtn');
+  if (theme === 'light') {
+    btn.innerHTML = '☀️';
+    btn.title = 'Mode Terang';
+  } else if (theme === 'normal') {
+    btn.innerHTML = '🎮';
+    btn.title = 'Mode Gaming';
+  } else {
+    btn.innerHTML = '🌙';
+    btn.title = 'Mode Gelap';
+  }
+}
+
+function cycleTheme() {
+  currentThemeIndex = (currentThemeIndex + 1) % themeStates.length;
+  const newTheme = themeStates[currentThemeIndex];
+  applyTheme(newTheme);
+}
+
+// load saved theme from localStorage
+function loadSavedThemeSingle() {
+  const saved = localStorage.getItem('diablo_theme');
+  if (saved === 'light') {
+    currentThemeIndex = 1;
+    applyTheme('light');
+  } else if (saved === 'normal') {
+    currentThemeIndex = 2;
+    applyTheme('normal');
+  } else {
+    currentThemeIndex = 0;
+    applyTheme('');
+  }
+}
+
+// ========== FUNGSI LAINNYA (COPY, PLATFORM, DLL) ==========
+function copyWithToast(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast("✓ Copied to clipboard!");
+  }).catch(() => {
+    showToast("⚠️ Press Ctrl+C manually", true);
+  });
+}
+
 function showToast(msg, isError = false) {
   let toast = document.createElement('div');
   toast.className = 'copy-feedback';
@@ -614,26 +557,13 @@ function showToast(msg, isError = false) {
   }, 2000);
 }
 
-// Enhanced copy with toast notification
-function copyWithToast(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showToast("✓ Copied to clipboard!");
-  }).catch(() => {
-    showToast("⚠️ Press Ctrl+C manually", true);
-  });
-}
-
-// Show selected platform instructions with active style
 function showPlatform(platformId) {
-  // hide all
   document.getElementById('android').style.display = 'none';
   document.getElementById('ios').style.display = 'none';
   document.getElementById('windows').style.display = 'none';
-  // show selected
   const activePanel = document.getElementById(platformId);
   if (activePanel) activePanel.style.display = 'block';
   
-  // update active button styling
   const btns = document.querySelectorAll('.platform-btn');
   btns.forEach(btn => btn.classList.remove('active'));
   if (platformId === 'android') document.getElementById('btnAndroid').classList.add('active');
@@ -641,91 +571,25 @@ function showPlatform(platformId) {
   if (platformId === 'windows') document.getElementById('btnWindows').classList.add('active');
 }
 
-// Theme handler with local storage persistence
-function setTheme(mode) {
-  if (mode === 'light') {
-    document.body.className = 'light';
-    localStorage.setItem('diablo_theme', 'light');
-  } else if (mode === 'normal') {
-    document.body.className = 'normal';
-    localStorage.setItem('diablo_theme', 'normal');
-  } else {
-    document.body.className = '';
-    localStorage.setItem('diablo_theme', 'dark');
-  }
-}
-
-// load saved theme
-function loadSavedTheme() {
-  const saved = localStorage.getItem('diablo_theme');
-  if (saved === 'light') setTheme('light');
-  else if (saved === 'normal') setTheme('normal');
-  else if (saved === 'dark') setTheme('');
-  else setTheme('');
-}
-
-// Real-time status updater
-let statusInterval;
-
-function startRealtimeStatus() {
-  // Initial check
-  checkServerStatus(false);
-  // Set interval for periodic checks
-  if (statusInterval) clearInterval(statusInterval);
-  statusInterval = setInterval(() => {
-    checkServerStatus(false);
-  }, CHECK_INTERVAL);
-}
-
-// Stop interval (if needed for page visibility)
-function stopRealtimeStatus() {
-  if (statusInterval) {
-    clearInterval(statusInterval);
-    statusInterval = null;
-  }
-}
-
-// Handle page visibility to save resources
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    stopRealtimeStatus();
-  } else {
-    startRealtimeStatus();
-  }
-});
-
-// Make sure global functions available
-window.copyWithToast = copyWithToast;
-window.checkServerStatus = checkServerStatus;
-window.showToast = showToast;
-
-// Initialize everything on page load
+// Inisialisasi
 window.onload = () => {
-  loadSavedTheme();
-  // default show windows, also active button
+  loadSavedThemeSingle();
   showPlatform('windows');
-  // add active glow to default windows button
   document.getElementById('btnWindows').classList.add('active');
   
-  // Start realtime server status checking
-  startRealtimeStatus();
-  
-  // Add click handler to refresh icon on status card
-  const refreshIcon = document.querySelector('.refresh-icon');
-  if (refreshIcon) {
-    refreshIcon.addEventListener('click', (e) => {
-      e.stopPropagation();
-      checkServerStatus(true);
-    });
+  // event untuk tombol tema tunggal
+  const themeBtn = document.getElementById('themeToggleBtn');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', cycleTheme);
   }
   
-  // Fix for older browsers clipboard fallback
+  // fallback clipboard
   if (!navigator.clipboard) {
     const btns = document.querySelectorAll('.button');
     btns.forEach(btn => {
       if(btn.innerText.includes('Copy')) {
         btn.addEventListener('click', () => {
-          alert('Your browser does not support auto-copy. Please copy manually.');
+          alert('Browser tidak support auto-copy. Silakan copy manual.');
         });
       }
     });
@@ -733,4 +597,4 @@ window.onload = () => {
 };
 </script>
 </body>
-                  </html>
+                                   </html>
